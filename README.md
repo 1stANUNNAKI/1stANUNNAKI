@@ -6,6 +6,11 @@
 
 </div>
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="https://www.gitskins.com/api/section/wordmark?username=1stanunnaki&theme=aurora&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4&label=ANUNNAKI&v=cinematic-hero-wordmark-1&mode=light" />
+  <img src="https://www.gitskins.com/api/section/wordmark?username=1stanunnaki&theme=aurora&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4&label=ANUNNAKI&v=cinematic-hero-wordmark-1&mode=dark" width="100%" alt="ANUNNAKI animated ASCII name" />
+</picture>
+
 
 # 🐲 𝕭𝖆𝖘𝖍𝖆𝖗 𝕿𝖜𝖆𝖎𝖏  -[♾️֎ 🇦🇮✨ {🧠🕸️} 🛡️🎓]-
 ### AI Engineer & Vibe Coder | Cybersecurity & EdTech Architect
@@ -63,6 +68,29 @@
 </div>
 
 -----
+
+## 📊 `> ./stats --player=1stanunnaki`
+
+<div align="center">
+
+<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api?username=1stanunnaki&show_icons=true&hide_border=false&bg_color=0D1117&title_color=00FF41&icon_color=00F0FF&text_color=C9D1D9&border_color=00FF41&ring_color=FF00E5&include_all_commits=true&count_private=true&custom_title=%F0%9F%8E%AE%20PLAYER%20STATS" />
+<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=1stanunnaki&layout=compact&hide_border=false&bg_color=0D1117&title_color=00FF41&text_color=C9D1D9&border_color=00F0FF&langs_count=8&custom_title=%E2%9A%94%EF%B8%8F%20WEAPON%20MASTERY" />
+
+<img src="https://streak-stats.demolab.com?user=1stanunnaki&theme=dark&background=0D1117&border=00FF41&ring=FF00E5&fire=FF00E5&currStreakNum=00FF41&sideNums=00F0FF&currStreakLabel=00F0FF&sideLabels=C9D1D9&dates=8B949E&stroke=00FF41" />
+
+</div>
+
+---
+
+## 🏆 `> unlock --achievements`
+
+<div align="center">
+
+<img src="https://github-trophies.vercel.app/?username=1stanunnaki&theme=matrix&no-frame=true&no-bg=true&margin-w=12&row=1&column=7" />
+
+</div>
+
+-----
 ### 🐉 Dragon Activity (Contribution Grid)
 
 <picture>
@@ -72,7 +100,16 @@
 </picture>
 
 ---
+<h1 align="center">ANUNNAKI</h1>
+<p align="center">Frontend or full-stack engineer</p>
 
+<p align="center">
+  <img src="https://www.gitskins.com/api/section/galaxy?username=1stanunnaki&theme=midnight&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4" alt="1stanunnaki galaxy visual" />
+</p>
+
+<p align="center"><b>4</b> public repositories, <b>1</b> stars, <b>22</b> contributions in the last year, a longest streak of <b>1</b> days and <b>13</b> followers.</p>
+
+----
 ### 🌐 links 
 
 | Section / Site | Description | Direct Link |
