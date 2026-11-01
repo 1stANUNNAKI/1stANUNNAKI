@@ -64,4 +64,4 @@ if __name__ == "__main__":
     changed = update_readme()
     print(f"README telemetry updated: {changed}")
 
-# Telemetry revision: 47 (obsidian-surface-token)
+# Telemetry revision: 48 (telemetry-timeout-config)
