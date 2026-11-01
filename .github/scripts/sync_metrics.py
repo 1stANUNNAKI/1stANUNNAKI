@@ -63,3 +63,4 @@ def update_readme() -> bool:
 if __name__ == "__main__":
     changed = update_readme()
     print(f"README telemetry updated: {changed}")
+
