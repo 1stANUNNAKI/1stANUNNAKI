@@ -64,4 +64,4 @@ if __name__ == "__main__":
     changed = update_readme()
     print(f"README telemetry updated: {changed}")
 
-# Telemetry revision: 86 (cyber-emerald-palette)
+# Telemetry revision: 87 (obsidian-surface-token)
