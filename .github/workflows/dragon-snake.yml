@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: "dragon-snake"
+  cancel-in-progress: true
+
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -26,9 +30,13 @@ jobs:
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
       - name: Publish Snake Assets to Output Branch
-        uses: crazy-max/ghaction-github-pages@v4
-        with:
-          target_branch: output
-          build_dir: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd dist
+          git init -b output
+          git config user.name "1stANUNNAKI"
+          git config user.email "1stANUNNAKI@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(snake): update 1stANUNNAKI contribution grid snake"
+          git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/1stANUNNAKI/1stANUNNAKI.git" HEAD:refs/heads/output
