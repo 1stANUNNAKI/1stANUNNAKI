@@ -64,4 +64,4 @@ if __name__ == "__main__":
     changed = update_readme()
     print(f"README telemetry updated: {changed}")
 
-# Telemetry revision: 55 (utf8-stream-encoding)
+# Telemetry revision: 56 (http-retry-backoff)
