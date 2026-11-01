@@ -108,7 +108,7 @@
   <img src="https://www.gitskins.com/api/section/galaxy?username=1stANUNNAKI&theme=midnight&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4" alt="1stanunnaki galaxy visual" />
 </p>
 
-<p align="center"><b>8</b> public repositories, <b>1</b> stars, <b>46</b> contributions in the last year, a longest streak of <b>3</b> days and <b>17</b> followers.</p>
+<p align="center"><b>8</b> public repositories, <b>1</b> stars, <b>82</b> contributions in the last year, a longest streak of <b>3</b> days and <b>16</b> followers.</p>
 
 ----
 ### 🌐 links 
