@@ -64,4 +64,4 @@ if __name__ == "__main__":
     changed = update_readme()
     print(f"README telemetry updated: {changed}")
 
-# Telemetry revision: 61 (minimax-depth-pruning)
+# Telemetry revision: 62 (terminal-command-router)
