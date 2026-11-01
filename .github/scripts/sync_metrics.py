@@ -64,4 +64,4 @@ if __name__ == "__main__":
     changed = update_readme()
     print(f"README telemetry updated: {changed}")
 
-# Telemetry revision: 28 (telemetry-timeout-config)
+# Telemetry revision: 29 (api-headers-normalization)
