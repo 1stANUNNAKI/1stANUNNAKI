@@ -1,0 +1,38 @@
+name: Sync Live Profile Telemetry
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-telemetry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout Profile Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python Runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Synchronize 1stANUNNAKI Live Account Metrics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/sync_metrics.py
+
+      - name: Commit Updated Profile Telemetry
+        run: |
+          git config user.name "1stANUNNAKI"
+          git config user.email "1stANUNNAKI@users.noreply.github.com"
+          if [[ -n $(git status --porcelain README.md) ]]; then
+            git add README.md
+            git commit -m "chore(telemetry): synchronize live account metrics in README"
+            git push origin HEAD:main
+          fi
