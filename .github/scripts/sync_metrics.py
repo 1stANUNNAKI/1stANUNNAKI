@@ -64,4 +64,4 @@ if __name__ == "__main__":
     changed = update_readme()
     print(f"README telemetry updated: {changed}")
 
-# Telemetry revision: 119 (snake-pathfinding-heuristic)
+# Telemetry revision: 120 (particle-alpha-decay)
