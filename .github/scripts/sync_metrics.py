@@ -64,4 +64,4 @@ if __name__ == "__main__":
     changed = update_readme()
     print(f"README telemetry updated: {changed}")
 
-# Telemetry revision: 116 (http-retry-backoff)
+# Telemetry revision: 117 (contribution-window-sync)
