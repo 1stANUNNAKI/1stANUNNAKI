@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: "profile-metrics"
+  cancel-in-progress: true
+
 jobs:
   sync-telemetry:
     runs-on: ubuntu-latest
@@ -34,5 +38,6 @@ jobs:
           if [[ -n $(git status --porcelain README.md) ]]; then
             git add README.md
             git commit -m "chore(telemetry): synchronize live account metrics in README"
+            git pull --rebase origin main
             git push origin HEAD:main
           fi
