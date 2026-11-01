@@ -1,15 +1,15 @@
   
 <div align="center">
 
-  <a href="https://btag-iq.github.io/BTAG-IQ/">
+  <a href="https://1stanunnaki.github.io/1stANUNNAKI/">
     <img src="dashboard.gif" alt="Bashar Twaij Interactive Dashboard" width="100%" />
   </a>
 
 </div>
 
 <picture>
-  <source media="(prefers-color-scheme: light)" srcset="https://www.gitskins.com/api/section/wordmark?username=1stanunnaki&theme=aurora&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4&label=ANUNNAKI&v=cinematic-hero-wordmark-1&mode=light" />
-  <img src="https://www.gitskins.com/api/section/wordmark?username=1stanunnaki&theme=aurora&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4&label=ANUNNAKI&v=cinematic-hero-wordmark-1&mode=dark" width="100%" alt="ANUNNAKI animated ASCII name" />
+  <source media="(prefers-color-scheme: light)" srcset="https://www.gitskins.com/api/section/wordmark?username=1stANUNNAKI&theme=aurora&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4&label=ANUNNAKI&v=cinematic-hero-wordmark-1&mode=light" />
+  <img src="https://www.gitskins.com/api/section/wordmark?username=1stANUNNAKI&theme=aurora&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4&label=ANUNNAKI&v=cinematic-hero-wordmark-1&mode=dark" width="100%" alt="ANUNNAKI animated ASCII name" />
 </picture>
 
 
@@ -18,7 +18,7 @@
 <div align="center">
   
 <!-- بطاقة عرض الداشبورد التفاعلية -->
-[![Interactive Dashboard Live](https://img.shields.io/badge/🎮_FULL_INTERACTIVE_DASHBOARD-PLAY_GAMES_%26_TERMINAL-8b5cf6?style=for-the-badge&logoColor=white)](https://btag-iq.github.io/BTAG-IQ/)
+[![Interactive Dashboard Live](https://img.shields.io/badge/🎮_FULL_INTERACTIVE_DASHBOARD-PLAY_GAMES_%26_TERMINAL-8b5cf6?style=for-the-badge&logoColor=white)](https://1stanunnaki.github.io/1stANUNNAKI/)
 [![Website](https://img.shields.io/badge/🌐_Visit-bashartwaij.com-10b981?style=for-the-badge)](https://bashartwaij.com)
 </div>
 
@@ -74,10 +74,10 @@
 
 <div align="center">
 
-<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api?username=1stanunnaki&show_icons=true&hide_border=false&bg_color=0D1117&title_color=00FF41&icon_color=00F0FF&text_color=C9D1D9&border_color=00FF41&ring_color=FF00E5&include_all_commits=true&count_private=true&custom_title=%F0%9F%8E%AE%20PLAYER%20STATS" />
-<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=1stanunnaki&layout=compact&hide_border=false&bg_color=0D1117&title_color=00FF41&text_color=C9D1D9&border_color=00F0FF&langs_count=8&custom_title=%E2%9A%94%EF%B8%8F%20WEAPON%20MASTERY" />
+<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api?username=1stANUNNAKI&show_icons=true&hide_border=false&bg_color=0D1117&title_color=00FF41&icon_color=00F0FF&text_color=C9D1D9&border_color=00FF41&ring_color=FF00E5&include_all_commits=true&count_private=true&custom_title=%F0%9F%8E%AE%20PLAYER%20STATS" />
+<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=1stANUNNAKI&layout=compact&hide_border=false&bg_color=0D1117&title_color=00FF41&text_color=C9D1D9&border_color=00F0FF&langs_count=8&custom_title=%E2%9A%94%EF%B8%8F%20WEAPON%20MASTERY" />
 
-<img src="https://streak-stats.demolab.com?user=1stanunnaki&theme=dark&background=0D1117&border=00FF41&ring=FF00E5&fire=FF00E5&currStreakNum=00FF41&sideNums=00F0FF&currStreakLabel=00F0FF&sideLabels=C9D1D9&dates=8B949E&stroke=00FF41" />
+<img src="https://streak-stats.demolab.com?user=1stANUNNAKI&theme=dark&background=0D1117&border=00FF41&ring=FF00E5&fire=FF00E5&currStreakNum=00FF41&sideNums=00F0FF&currStreakLabel=00F0FF&sideLabels=C9D1D9&dates=8B949E&stroke=00FF41" />
 
 </div>
 
@@ -87,7 +87,7 @@
 
 <div align="center">
 
-<img src="https://github-trophies.vercel.app/?username=1stanunnaki&theme=matrix&no-frame=true&no-bg=true&margin-w=12&row=1&column=7" />
+<img src="https://github-trophies.vercel.app/?username=1stANUNNAKI&theme=matrix&no-frame=true&no-bg=true&margin-w=12&row=1&column=7" />
 
 </div>
 
@@ -95,9 +95,9 @@
 ### 🐉 Dragon Activity (Contribution Grid)
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BTAG-IQ/BTAG-IQ/output/github-contribution-grid-snake-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/BTAG-IQ/BTAG-IQ/output/github-contribution-grid-snake.svg">
-  <img alt="github contribution dragon snake grid" src="https://raw.githubusercontent.com/BTAG-IQ/BTAG-IQ/output/github-contribution-grid-snake.svg" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/output/github-contribution-grid-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/output/github-contribution-grid-snake.svg">
+  <img alt="github contribution dragon snake grid" src="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/output/github-contribution-grid-snake.svg" width="100%">
 </picture>
 
 ---
@@ -105,10 +105,10 @@
 <p align="center">Frontend or full-stack engineer</p>
 
 <p align="center">
-  <img src="https://www.gitskins.com/api/section/galaxy?username=1stanunnaki&theme=midnight&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4" alt="1stanunnaki galaxy visual" />
+  <img src="https://www.gitskins.com/api/section/galaxy?username=1stANUNNAKI&theme=midnight&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4" alt="1stanunnaki galaxy visual" />
 </p>
 
-<p align="center"><b>4</b> public repositories, <b>1</b> stars, <b>22</b> contributions in the last year, a longest streak of <b>1</b> days and <b>13</b> followers.</p>
+<p align="center"><b>8</b> public repositories, <b>1</b> stars, <b>46</b> contributions in the last year, a longest streak of <b>3</b> days and <b>17</b> followers.</p>
 
 ----
 ### 🌐 links 
@@ -126,6 +126,6 @@
 ---
 
 ### 🕹️ Interactive Features Notice
-> **Note:** To play **Tic-Tac-Toe vs AI**, control the **Cyber Dragon Canvas**, or use the **Interactive CLI Shell**, please click the **[Launch Interactive Dashboard](https://btag-iq.github.io/BTAG-IQ/)** banner above!
+> **Note:** To play **Tic-Tac-Toe vs AI**, control the **Cyber Dragon Canvas**, or use the **Interactive CLI Shell**, please click the **[Launch Interactive Dashboard](https://1stanunnaki.github.io/1stANUNNAKI/)** banner above!
 
 </div>
