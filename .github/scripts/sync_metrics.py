@@ -64,4 +64,4 @@ if __name__ == "__main__":
     changed = update_readme()
     print(f"README telemetry updated: {changed}")
 
-# Telemetry revision: 71 (repo-pagination-guard)
+# Telemetry revision: 72 (star-counter-aggregation)
