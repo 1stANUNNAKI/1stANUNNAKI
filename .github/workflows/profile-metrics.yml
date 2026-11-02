@@ -35,9 +35,9 @@ jobs:
         run: |
           git config user.name "1stANUNNAKI"
           git config user.email "1stANUNNAKI@users.noreply.github.com"
-          if [[ -n $(git status --porcelain README.md streak-stats.svg) ]]; then
-            git add README.md streak-stats.svg
-            git commit -m "chore(telemetry): synchronize live account metrics and streak SVG"
+          if [[ -n $(git status --porcelain README.md streak-stats.svg trophies.svg) ]]; then
+            git add README.md streak-stats.svg trophies.svg
+            git commit -m "chore(telemetry): synchronize live account metrics, streak SVG, and trophies SVG"
             git pull --rebase origin main
             git push origin HEAD:main
           fi
