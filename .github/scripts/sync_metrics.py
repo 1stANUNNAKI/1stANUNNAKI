@@ -4,13 +4,22 @@ import os
 import re
 import time
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 USERNAME = "1stANUNNAKI"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 README_PATH = REPO_ROOT / "README.md"
 STREAK_SVG_PATH = REPO_ROOT / "streak-stats.svg"
+TROPHIES_SVG_PATH = REPO_ROOT / "trophies.svg"
+
+# Exact REPO GALAXY (theme=midnight) Color Palette
+GALAXY_BG = "#060b1e"
+GALAXY_BORDER = "#5b5c8a"
+GALAXY_TITLE = "#8087e2"
+GALAXY_TEXT = "#dee7f0"
+GALAXY_SUBTEXT = "#9098bf"
+GALAXY_GOLD = "#facc15"
 
 
 def fmt_date(date_str: str) -> str:
@@ -22,7 +31,7 @@ def fmt_date(date_str: str) -> str:
 
 
 def fetch_json(url: str, method: str = "GET", payload: dict | None = None, extra_headers: dict | None = None) -> dict:
-    headers = {"User-Agent": "1stANUNNAKI-Profile-Sync/3.0", "Accept": "application/vnd.github+json"}
+    headers = {"User-Agent": "1stANUNNAKI-Profile-Sync/4.0", "Accept": "application/vnd.github+json"}
     token = os.environ.get("GITHUB_TOKEN")
     if token and "api.github.com" in url:
         headers["Authorization"] = f"Bearer {token}"
@@ -35,6 +44,12 @@ def fetch_json(url: str, method: str = "GET", payload: dict | None = None, extra
     req = urllib.request.Request(url, data=data, headers=headers, method=method)
     with urllib.request.urlopen(req, timeout=20) as resp:
         return json.loads(resp.read().decode("utf-8"))
+
+
+def fetch_text(url: str) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": "1stANUNNAKI-Profile-Sync/4.0"})
+    with urllib.request.urlopen(req, timeout=25) as resp:
+        return resp.read().decode("utf-8")
 
 
 def fetch_live_contributions_and_streaks() -> dict:
@@ -58,7 +73,6 @@ def fetch_live_contributions_and_streaks() -> dict:
     except Exception:
         pass
 
-    # 2. Fetch live GraphQL contribution breakdown & calendar days
     gql_calendar = 0
     gql_prs = 0
     gql_commits = 0
@@ -82,12 +96,11 @@ def fetch_live_contributions_and_streaks() -> dict:
                 int(cc.get("totalPullRequestContributions", 0)),
                 int(user_node.get("pullRequests", {}).get("totalCount", 0)),
             )
-            # Compute live streaks from calendar days
             days = [
                 d for w in cal.get("weeks", []) for d in w.get("contributionDays", [])
                 if d.get("date")
             ]
-            today_str = datetime.utcnow().strftime("%Y-%m-%d")
+            today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
             days = [d for d in days if d["date"] <= today_str]
             if days:
                 b_len, b_start, b_end = 0, "", ""
@@ -101,7 +114,6 @@ def fetch_live_contributions_and_streaks() -> dict:
                         if c_len >= b_len:
                             b_len, b_start, b_end = c_len, c_start, c_end
                     else:
-                        # Allow today to have 0 so far without breaking yesterday's active streak
                         if d["date"] == today_str and c_len > 0:
                             continue
                         c_len = 0
@@ -114,12 +126,9 @@ def fetch_live_contributions_and_streaks() -> dict:
         except Exception:
             pass
 
-    # 3. Fetch total all-branch commits via GitHub Search API (same source as PLAYER STATS include_all_commits=true)
     search_commits = 0
     try:
-        c_search = fetch_json(
-            f"https://api.github.com/search/commits?q=author:{USERNAME}"
-        )
+        c_search = fetch_json(f"https://api.github.com/search/commits?q=author:{USERNAME}")
         search_commits = int(c_search.get("total_count", 0))
     except Exception:
         pass
@@ -140,6 +149,7 @@ def fetch_live_contributions_and_streaks() -> dict:
 
 
 def render_streak_svg(data: dict) -> str:
+    """Renders streak-stats.svg unified with the REPO GALAXY (midnight) color palette."""
     total_formatted = f"{data['total_contributions']:,}"
     curr_streak = str(data["current_streak"])
     long_streak = str(data["longest_streak"])
@@ -170,66 +180,66 @@ def render_streak_svg(data: dict) -> str:
         </defs>
         <g clip-path='url(#outer_rectangle)'>
             <g style='isolation: isolate'>
-                <rect stroke='#00ff41' fill='#0d1117' rx='4.5' x='0.5' y='0.5' width='494' height='194'/>
+                <rect stroke='{GALAXY_BORDER}' fill='{GALAXY_BG}' rx='4.5' x='0.5' y='0.5' width='494' height='194'/>
             </g>
             <g style='isolation: isolate'>
-                <line x1='165' y1='28' x2='165' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='#00ff41' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
-                <line x1='330' y1='28' x2='330' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='#00ff41' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
+                <line x1='165' y1='28' x2='165' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='{GALAXY_BORDER}' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
+                <line x1='330' y1='28' x2='330' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='{GALAXY_BORDER}' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
             </g>
             <g style='isolation: isolate'>
                 <g transform='translate(82.5, 48)'>
-                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#00f0ff' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.6s'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='{GALAXY_TEXT}' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.6s'>
                         {total_formatted}
                     </text>
                 </g>
                 <g transform='translate(82.5, 84)'>
-                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#c9d1d9' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='14px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.7s'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='{GALAXY_TITLE}' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='600' font-size='14px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.7s'>
                         Total Contributions
                     </text>
                 </g>
                 <g transform='translate(82.5, 114)'>
-                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#8b949e' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='12px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.8s'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='{GALAXY_SUBTEXT}' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='12px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.8s'>
                         Mar 30, 2013 - Present
                     </text>
                 </g>
             </g>
             <g style='isolation: isolate'>
                 <g transform='translate(247.5, 108)'>
-                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#00f0ff' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='14px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.9s'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='{GALAXY_TITLE}' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='14px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.9s'>
                         Current Streak
                     </text>
                 </g>
                 <g transform='translate(247.5, 145)'>
-                    <text x='0' y='21' stroke-width='0' text-anchor='middle' fill='#8b949e' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='12px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.9s'>
+                    <text x='0' y='21' stroke-width='0' text-anchor='middle' fill='{GALAXY_SUBTEXT}' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='12px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.9s'>
                         {curr_range}
                     </text>
                 </g>
                 <g mask='url(#mask_out_ring_behind_fire)'>
-                    <circle cx='247.5' cy='71' r='40' fill='none' stroke='#ff00e5' stroke-width='5' style='opacity: 0; animation: fadein 0.5s linear forwards 0.4s'></circle>
+                    <circle cx='247.5' cy='71' r='40' fill='none' stroke='{GALAXY_TITLE}' stroke-width='5' style='opacity: 0; animation: fadein 0.5s linear forwards 0.4s'></circle>
                 </g>
                 <g transform='translate(247.5, 19.5)' stroke-opacity='0' style='opacity: 0; animation: fadein 0.5s linear forwards 0.6s'>
                     <path d='M -12 -0.5 L 15 -0.5 L 15 23.5 L -12 23.5 L -12 -0.5 Z' fill='none'/>
-                    <path d='M 1.5 0.67 C 1.5 0.67 2.24 3.32 2.24 5.47 C 2.24 7.53 0.89 9.2 -1.17 9.2 C -3.23 9.2 -4.79 7.53 -4.79 5.47 L -4.76 5.11 C -6.78 7.51 -8 10.62 -8 13.99 C -8 18.41 -4.42 22 0 22 C 4.42 22 8 18.41 8 13.99 C 8 8.6 5.41 3.79 1.5 0.67 Z M -0.29 19 C -2.07 19 -3.51 17.6 -3.51 15.86 C -3.51 14.24 -2.46 13.1 -0.7 12.74 C 1.07 12.38 2.9 11.53 3.92 10.16 C 4.31 11.45 4.51 12.81 4.51 14.2 C 4.51 16.85 2.36 19 -0.29 19 Z' fill='#ff00e5' stroke-opacity='0'/>
+                    <path d='M 1.5 0.67 C 1.5 0.67 2.24 3.32 2.24 5.47 C 2.24 7.53 0.89 9.2 -1.17 9.2 C -3.23 9.2 -4.79 7.53 -4.79 5.47 L -4.76 5.11 C -6.78 7.51 -8 10.62 -8 13.99 C -8 18.41 -4.42 22 0 22 C 4.42 22 8 18.41 8 13.99 C 8 8.6 5.41 3.79 1.5 0.67 Z M -0.29 19 C -2.07 19 -3.51 17.6 -3.51 15.86 C -3.51 14.24 -2.46 13.1 -0.7 12.74 C 1.07 12.38 2.9 11.53 3.92 10.16 C 4.31 11.45 4.51 12.81 4.51 14.2 C 4.51 16.85 2.36 19 -0.29 19 Z' fill='{GALAXY_GOLD}' stroke-opacity='0'/>
                 </g>
                 <g transform='translate(247.5, 48)'>
-                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#00ff41' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='animation: currstreak 0.6s linear forwards'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='{GALAXY_GOLD}' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='animation: currstreak 0.6s linear forwards'>
                         {curr_streak}
                     </text>
                 </g>
             </g>
             <g style='isolation: isolate'>
                 <g transform='translate(412.5, 48)'>
-                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#00f0ff' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 1.2s'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='{GALAXY_TEXT}' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 1.2s'>
                         {long_streak}
                     </text>
                 </g>
                 <g transform='translate(412.5, 84)'>
-                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#c9d1d9' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='14px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 1.3s'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='{GALAXY_TITLE}' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='600' font-size='14px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 1.3s'>
                         Longest Streak
                     </text>
                 </g>
                 <g transform='translate(412.5, 114)'>
-                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#8b949e' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='12px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 1.4s'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='{GALAXY_SUBTEXT}' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='12px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 1.4s'>
                         {long_range}
                     </text>
                 </g>
@@ -238,11 +248,45 @@ def render_streak_svg(data: dict) -> str:
     </svg>"""
 
 
+def sync_trophies_svg(v: int) -> None:
+    """Fetches github-trophies SVG and re-themes it to match REPO GALAXY (midnight) with zero green."""
+    url = (
+        f"https://github-trophies.vercel.app/?username={USERNAME}"
+        f"&theme=tokyonight&no-frame=false&no-bg=false&margin-w=12&row=1&column=7&v={v}"
+    )
+    try:
+        svg = fetch_text(url)
+        # 1. Card background and border matching REPO GALAXY (#060b1e bg, #5b5c8a border)
+        svg = svg.replace('fill="#1a1b27"', f'fill="{GALAXY_BG}"')
+        svg = svg.replace('stroke="#e1e4e8"', f'stroke="{GALAXY_BORDER}"')
+        # 2. Trophy header title -> Cosmic Periwinkle Indigo (#8087e2)
+        svg = svg.replace('fill="#70a5fd"', f'fill="{GALAXY_TITLE}"')
+        # 3. Rank title (y="85") -> Starlight Ice White (#dee7f0), Points subtitle (y="97") -> Lavender-Slate (#9098bf)
+        svg = re.sub(
+            r'(<text x="50%" y="85"[^>]+fill=")#38bdae(")',
+            rf'\g<1>{GALAXY_TEXT}\2',
+            svg,
+        )
+        svg = re.sub(
+            r'(<text x="50%" y="97"[^>]+fill=")#38bdae(")',
+            rf'\g<1>{GALAXY_SUBTEXT}\2',
+            svg,
+        )
+        # 4. Replace hardcoded green laurel wreaths (#178600) and green/teal accents (#2dde98) with Galaxy Indigo/Gold
+        svg = svg.replace('fill="#178600"', f'fill="{GALAXY_TITLE}"')
+        svg = svg.replace('stop-color="#2dde98"', f'stop-color="{GALAXY_TITLE}"')
+        svg = svg.replace('fill="#00aeff"', f'fill="{GALAXY_TITLE}"')
+        TROPHIES_SVG_PATH.write_text(svg, encoding="utf-8")
+    except Exception as exc:
+        print(f"[Telemetry] Trophies SVG sync warning: {exc}")
+
+
 def fetch_account_metrics() -> dict:
     user_data = fetch_json(f"https://api.github.com/users/{USERNAME}")
     repos_data = fetch_json(f"https://api.github.com/users/{USERNAME}/repos?per_page=100")
     live = fetch_live_contributions_and_streaks()
     STREAK_SVG_PATH.write_text(render_streak_svg(live), encoding="utf-8")
+    sync_trophies_svg(live["v"])
 
     stars = sum(int(r.get("stargazers_count", 0)) for r in repos_data if isinstance(r, dict))
     return {
@@ -266,25 +310,39 @@ def build_summary_line(metrics: dict) -> str:
 
 
 def refresh_card_urls(content: str, v: int) -> str:
-    # Replace external cached streak-stats.demolab.com URL with our live repository-generated streak-stats.svg
+    # 1. Self-hosted streak-stats.svg in REPO GALAXY midnight theme
     content = re.sub(
         r'<img src="https://(?:streak-stats\.demolab\.com|raw\.githubusercontent\.com/1stANUNNAKI/1stANUNNAKI/main/streak-stats\.svg)[^"]*" />',
         f'<img src="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/main/streak-stats.svg?v={v}" />',
         content,
     )
-
-    def _update_url(match: re.Match) -> str:
-        prefix = match.group(1)
-        url = match.group(2)
-        suffix = match.group(3)
-        url = re.sub(r"&cache_seconds=\d+", "", url)
-        url = re.sub(r"&v=[\w-]+", "", url)
-        return f'{prefix}{url}&cache_seconds=1800&v={v}{suffix}'
-
-    card_pattern = re.compile(
-        r'(<img[^>]+src=")(https://(?:github-readme-stats-eight-theta\.vercel\.app|github-trophies\.vercel\.app)[^"]+)(")'
+    # 2. Self-hosted trophies.svg in REPO GALAXY midnight theme
+    content = re.sub(
+        r'<img src="https://(?:github-trophies\.vercel\.app|raw\.githubusercontent\.com/1stANUNNAKI/1stANUNNAKI/main/trophies\.svg)[^"]*" />',
+        f'<img src="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/main/trophies.svg?v={v}" />',
+        content,
     )
-    return card_pattern.sub(_update_url, content)
+    # 3. Unify PLAYER STATS and WEAPON MASTERY colors with REPO GALAXY midnight palette
+    content = re.sub(
+        r'<img height="180" src="https://github-readme-stats-eight-theta\.vercel\.app/api\?username=1stANUNNAKI[^"]*" />',
+        (
+            f'<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api?username=1stANUNNAKI'
+            f'&show_icons=true&hide_border=false&bg_color=060B1E&title_color=8087E2&icon_color=FACC15'
+            f'&text_color=DEE7F0&border_color=5B5C8A&ring_color=8087E2&include_all_commits=true'
+            f'&count_private=true&custom_title=%F0%9F%8E%AE%20PLAYER%20STATS&cache_seconds=1800&v={v}" />'
+        ),
+        content,
+    )
+    content = re.sub(
+        r'<img height="180" src="https://github-readme-stats-eight-theta\.vercel\.app/api/top-langs/\?username=1stANUNNAKI[^"]*" />',
+        (
+            f'<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=1stANUNNAKI'
+            f'&layout=compact&hide_border=false&bg_color=060B1E&title_color=8087E2&text_color=DEE7F0'
+            f'&border_color=5B5C8A&langs_count=8&custom_title=%E2%9A%94%EF%B8%8F%20WEAPON%20MASTERY&cache_seconds=1800&v={v}" />'
+        ),
+        content,
+    )
+    return content
 
 
 def update_readme() -> bool:
@@ -305,4 +363,4 @@ def update_readme() -> bool:
 
 if __name__ == "__main__":
     changed = update_readme()
-    print(f"README and streak-stats.svg telemetry updated: {changed}")
+    print(f"README, streak-stats.svg, and trophies.svg telemetry updated: {changed}")
