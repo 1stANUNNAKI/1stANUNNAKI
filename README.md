@@ -74,10 +74,10 @@
 
 <div align="center">
 
-<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api?username=1stANUNNAKI&show_icons=true&hide_border=false&bg_color=0D1117&title_color=00FF41&icon_color=00F0FF&text_color=C9D1D9&border_color=00FF41&ring_color=FF00E5&include_all_commits=true&count_private=true&custom_title=%F0%9F%8E%AE%20PLAYER%20STATS&cache_seconds=1800&v=1793615272" />
-<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=1stANUNNAKI&layout=compact&hide_border=false&bg_color=0D1117&title_color=00FF41&text_color=C9D1D9&border_color=00F0FF&langs_count=8&custom_title=%E2%9A%94%EF%B8%8F%20WEAPON%20MASTERY&cache_seconds=1800&v=1793615272" />
+<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api?username=1stANUNNAKI&show_icons=true&hide_border=false&bg_color=0D1117&title_color=00FF41&icon_color=00F0FF&text_color=C9D1D9&border_color=00FF41&ring_color=FF00E5&include_all_commits=true&count_private=true&custom_title=%F0%9F%8E%AE%20PLAYER%20STATS&cache_seconds=1800&v=1793615923" />
+<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=1stANUNNAKI&layout=compact&hide_border=false&bg_color=0D1117&title_color=00FF41&text_color=C9D1D9&border_color=00F0FF&langs_count=8&custom_title=%E2%9A%94%EF%B8%8F%20WEAPON%20MASTERY&cache_seconds=1800&v=1793615923" />
 
-<img src="https://streak-stats.demolab.com?user=1stANUNNAKI&theme=dark&background=0D1117&border=00FF41&ring=FF00E5&fire=FF00E5&currStreakNum=00FF41&sideNums=00F0FF&currStreakLabel=00F0FF&sideLabels=C9D1D9&dates=8B949E&stroke=00FF41&cache_seconds=1800&v=1793615272" />
+<img src="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/main/streak-stats.svg?v=1793615923" />
 
 </div>
 
@@ -87,7 +87,7 @@
 
 <div align="center">
 
-<img src="https://github-trophies.vercel.app/?username=1stANUNNAKI&theme=matrix&no-frame=true&no-bg=true&margin-w=12&row=1&column=7&cache_seconds=1800&v=1793615272" />
+<img src="https://github-trophies.vercel.app/?username=1stANUNNAKI&theme=matrix&no-frame=true&no-bg=true&margin-w=12&row=1&column=7&cache_seconds=1800&v=1793615923" />
 
 </div>
 
@@ -108,7 +108,7 @@
   <img src="https://www.gitskins.com/api/section/galaxy?username=1stANUNNAKI&theme=midnight&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4" alt="1stanunnaki galaxy visual" />
 </p>
 
-<p align="center"><b>10</b> public repositories, <b>2</b> stars, <b>4165</b> contributions in the last year, a longest streak of <b>4</b> days and <b>24</b> followers.</p>
+<p align="center"><b>10</b> public repositories, <b>2</b> stars, <b>4166</b> contributions in the last year, a longest streak of <b>4</b> days and <b>24</b> followers.</p>
 
 ----
 ### 🌐 links 

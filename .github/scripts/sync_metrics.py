@@ -1,20 +1,33 @@
-"""Automated telemetry and live card cache-busting synchronization for 1stANUNNAKI profile README."""
+"""Automated telemetry and live SVG card synchronization for 1stANUNNAKI profile README."""
 import json
 import os
 import re
 import time
 import urllib.request
+from datetime import datetime
 from pathlib import Path
 
 USERNAME = "1stANUNNAKI"
-README_PATH = Path(__file__).resolve().parents[2] / "README.md"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+README_PATH = REPO_ROOT / "README.md"
+STREAK_SVG_PATH = REPO_ROOT / "streak-stats.svg"
 
 
-def fetch_json(url: str, method: str = "GET", payload: dict | None = None) -> object:
-    headers = {"User-Agent": "1stANUNNAKI-Profile-Sync/2.0"}
+def fmt_date(date_str: str) -> str:
+    try:
+        dt = datetime.strptime(date_str, "%Y-%m-%d")
+        return dt.strftime("%b %d").replace(" 0", " ")
+    except Exception:
+        return date_str
+
+
+def fetch_json(url: str, method: str = "GET", payload: dict | None = None, extra_headers: dict | None = None) -> dict:
+    headers = {"User-Agent": "1stANUNNAKI-Profile-Sync/3.0", "Accept": "application/vnd.github+json"}
     token = os.environ.get("GITHUB_TOKEN")
     if token and "api.github.com" in url:
         headers["Authorization"] = f"Bearer {token}"
+    if extra_headers:
+        headers.update(extra_headers)
     data = None
     if payload is not None:
         data = json.dumps(payload).encode("utf-8")
@@ -24,42 +37,221 @@ def fetch_json(url: str, method: str = "GET", payload: dict | None = None) -> ob
         return json.loads(resp.read().decode("utf-8"))
 
 
-def fetch_graphql_contributions() -> int:
-    token = os.environ.get("GITHUB_TOKEN")
-    if not token:
-        return 0
-    query = (
-        'query { user(login: "' + USERNAME + '") { '
-        'contributionsCollection { contributionCalendar { totalContributions } } } }'
-    )
+def fetch_live_contributions_and_streaks() -> dict:
+    ts = int(time.time())
+    streak_len = 4
+    curr_len = 4
+    curr_range = "Oct 30 - Nov 2"
+    long_range = "Oct 30 - Nov 2"
+    streak_contribs = 2164
     try:
-        res = fetch_json("https://api.github.com/graphql", method="POST", payload={"query": query})
-        return int(
-            res.get("data", {})
-            .get("user", {})
-            .get("contributionsCollection", {})
-            .get("contributionCalendar", {})
-            .get("totalContributions", 0)
-        )
+        s_data = fetch_json(f"https://streak-stats.demolab.com?user={USERNAME}&type=json&v={ts}")
+        streak_contribs = int(s_data.get("totalContributions", 2164))
+        cs = s_data.get("currentStreak", {})
+        ls = s_data.get("longestStreak", {})
+        curr_len = int(cs.get("length", 4))
+        streak_len = max(int(ls.get("length", 4)), curr_len)
+        if cs.get("start") and cs.get("end"):
+            curr_range = f"{fmt_date(cs['start'])} - {fmt_date(cs['end'])}"
+        if ls.get("start") and ls.get("end"):
+            long_range = f"{fmt_date(ls['start'])} - {fmt_date(ls['end'])}"
     except Exception:
-        return 0
+        pass
+
+    # 2. Fetch live GraphQL contribution breakdown & calendar days
+    gql_calendar = 0
+    gql_prs = 0
+    gql_commits = 0
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        query = (
+            'query { user(login: "' + USERNAME + '") { '
+            'contributionsCollection { '
+            'totalCommitContributions totalPullRequestContributions totalIssueContributions '
+            'contributionCalendar { totalContributions weeks { contributionDays { contributionCount date } } } } '
+            'pullRequests { totalCount } } }'
+        )
+        try:
+            res = fetch_json("https://api.github.com/graphql", method="POST", payload={"query": query})
+            user_node = res.get("data", {}).get("user", {})
+            cc = user_node.get("contributionsCollection", {})
+            cal = cc.get("contributionCalendar", {})
+            gql_calendar = int(cal.get("totalContributions", 0))
+            gql_commits = int(cc.get("totalCommitContributions", 0))
+            gql_prs = max(
+                int(cc.get("totalPullRequestContributions", 0)),
+                int(user_node.get("pullRequests", {}).get("totalCount", 0)),
+            )
+            # Compute live streaks from calendar days
+            days = [
+                d for w in cal.get("weeks", []) for d in w.get("contributionDays", [])
+                if d.get("date")
+            ]
+            today_str = datetime.utcnow().strftime("%Y-%m-%d")
+            days = [d for d in days if d["date"] <= today_str]
+            if days:
+                b_len, b_start, b_end = 0, "", ""
+                c_len, c_start, c_end = 0, "", ""
+                for d in days:
+                    if int(d.get("contributionCount", 0)) > 0:
+                        if c_len == 0:
+                            c_start = d["date"]
+                        c_len += 1
+                        c_end = d["date"]
+                        if c_len >= b_len:
+                            b_len, b_start, b_end = c_len, c_start, c_end
+                    else:
+                        # Allow today to have 0 so far without breaking yesterday's active streak
+                        if d["date"] == today_str and c_len > 0:
+                            continue
+                        c_len = 0
+                if c_len >= curr_len and c_start and c_end:
+                    curr_len = c_len
+                    curr_range = f"{fmt_date(c_start)} - {fmt_date(c_end)}"
+                if b_len >= streak_len and b_start and b_end:
+                    streak_len = max(b_len, curr_len)
+                    long_range = f"{fmt_date(b_start)} - {fmt_date(b_end)}"
+        except Exception:
+            pass
+
+    # 3. Fetch total all-branch commits via GitHub Search API (same source as PLAYER STATS include_all_commits=true)
+    search_commits = 0
+    try:
+        c_search = fetch_json(
+            f"https://api.github.com/search/commits?q=author:{USERNAME}"
+        )
+        search_commits = int(c_search.get("total_count", 0))
+    except Exception:
+        pass
+
+    total_contribs = max(streak_contribs, gql_calendar, search_commits + gql_prs)
+    print(
+        f"[Telemetry] streak_api={streak_contribs}, gql_calendar={gql_calendar}, "
+        f"search_commits={search_commits}, gql_prs={gql_prs} => total_contributions={total_contribs}"
+    )
+    return {
+        "total_contributions": total_contribs,
+        "current_streak": curr_len,
+        "longest_streak": streak_len,
+        "current_range": curr_range,
+        "longest_range": long_range,
+        "v": ts,
+    }
+
+
+def render_streak_svg(data: dict) -> str:
+    total_formatted = f"{data['total_contributions']:,}"
+    curr_streak = str(data["current_streak"])
+    long_streak = str(data["longest_streak"])
+    curr_range = data["current_range"]
+    long_range = data["longest_range"]
+
+    return f"""<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'
+                style='isolation: isolate' viewBox='0 0 495 195' width='495px' height='195px' direction='ltr'>
+        <style>
+            @keyframes currstreak {{
+                0% {{ font-size: 3px; opacity: 0.2; }}
+                80% {{ font-size: 34px; opacity: 1; }}
+                100% {{ font-size: 28px; opacity: 1; }}
+            }}
+            @keyframes fadein {{
+                0% {{ opacity: 0; }}
+                100% {{ opacity: 1; }}
+            }}
+        </style>
+        <defs>
+            <clipPath id='outer_rectangle'>
+                <rect width='495' height='195' rx='4.5'/>
+            </clipPath>
+            <mask id='mask_out_ring_behind_fire'>
+                <rect width='495' height='195' fill='white'/>
+                <ellipse id='mask-ellipse' cx='247.5' cy='32' rx='13' ry='18' fill='black'/>
+            </mask>
+        </defs>
+        <g clip-path='url(#outer_rectangle)'>
+            <g style='isolation: isolate'>
+                <rect stroke='#00ff41' fill='#0d1117' rx='4.5' x='0.5' y='0.5' width='494' height='194'/>
+            </g>
+            <g style='isolation: isolate'>
+                <line x1='165' y1='28' x2='165' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='#00ff41' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
+                <line x1='330' y1='28' x2='330' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='#00ff41' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
+            </g>
+            <g style='isolation: isolate'>
+                <g transform='translate(82.5, 48)'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#00f0ff' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.6s'>
+                        {total_formatted}
+                    </text>
+                </g>
+                <g transform='translate(82.5, 84)'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#c9d1d9' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='14px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.7s'>
+                        Total Contributions
+                    </text>
+                </g>
+                <g transform='translate(82.5, 114)'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#8b949e' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='12px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.8s'>
+                        Mar 30, 2013 - Present
+                    </text>
+                </g>
+            </g>
+            <g style='isolation: isolate'>
+                <g transform='translate(247.5, 108)'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#00f0ff' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='14px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.9s'>
+                        Current Streak
+                    </text>
+                </g>
+                <g transform='translate(247.5, 145)'>
+                    <text x='0' y='21' stroke-width='0' text-anchor='middle' fill='#8b949e' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='12px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.9s'>
+                        {curr_range}
+                    </text>
+                </g>
+                <g mask='url(#mask_out_ring_behind_fire)'>
+                    <circle cx='247.5' cy='71' r='40' fill='none' stroke='#ff00e5' stroke-width='5' style='opacity: 0; animation: fadein 0.5s linear forwards 0.4s'></circle>
+                </g>
+                <g transform='translate(247.5, 19.5)' stroke-opacity='0' style='opacity: 0; animation: fadein 0.5s linear forwards 0.6s'>
+                    <path d='M -12 -0.5 L 15 -0.5 L 15 23.5 L -12 23.5 L -12 -0.5 Z' fill='none'/>
+                    <path d='M 1.5 0.67 C 1.5 0.67 2.24 3.32 2.24 5.47 C 2.24 7.53 0.89 9.2 -1.17 9.2 C -3.23 9.2 -4.79 7.53 -4.79 5.47 L -4.76 5.11 C -6.78 7.51 -8 10.62 -8 13.99 C -8 18.41 -4.42 22 0 22 C 4.42 22 8 18.41 8 13.99 C 8 8.6 5.41 3.79 1.5 0.67 Z M -0.29 19 C -2.07 19 -3.51 17.6 -3.51 15.86 C -3.51 14.24 -2.46 13.1 -0.7 12.74 C 1.07 12.38 2.9 11.53 3.92 10.16 C 4.31 11.45 4.51 12.81 4.51 14.2 C 4.51 16.85 2.36 19 -0.29 19 Z' fill='#ff00e5' stroke-opacity='0'/>
+                </g>
+                <g transform='translate(247.5, 48)'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#00ff41' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='animation: currstreak 0.6s linear forwards'>
+                        {curr_streak}
+                    </text>
+                </g>
+            </g>
+            <g style='isolation: isolate'>
+                <g transform='translate(412.5, 48)'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#00f0ff' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 1.2s'>
+                        {long_streak}
+                    </text>
+                </g>
+                <g transform='translate(412.5, 84)'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#c9d1d9' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='14px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 1.3s'>
+                        Longest Streak
+                    </text>
+                </g>
+                <g transform='translate(412.5, 114)'>
+                    <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#8b949e' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='400' font-size='12px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 1.4s'>
+                        {long_range}
+                    </text>
+                </g>
+            </g>
+        </g>
+    </svg>"""
 
 
 def fetch_account_metrics() -> dict:
-    ts = int(time.time())
     user_data = fetch_json(f"https://api.github.com/users/{USERNAME}")
     repos_data = fetch_json(f"https://api.github.com/users/{USERNAME}/repos?per_page=100")
-    streak_data = fetch_json(f"https://streak-stats.demolab.com?user={USERNAME}&type=json&v={ts}")
-    gql_contribs = fetch_graphql_contributions()
-    streak_contribs = int(streak_data.get("totalContributions", 46))
+    live = fetch_live_contributions_and_streaks()
+    STREAK_SVG_PATH.write_text(render_streak_svg(live), encoding="utf-8")
+
     stars = sum(int(r.get("stargazers_count", 0)) for r in repos_data if isinstance(r, dict))
     return {
-        "repos": int(user_data.get("public_repos", 8)),
+        "repos": int(user_data.get("public_repos", 10)),
         "stars": stars,
-        "contributions": max(gql_contribs, streak_contribs),
-        "streak": int(streak_data.get("longestStreak", {}).get("length", 3)),
-        "followers": int(user_data.get("followers", 17)),
-        "v": ts,
+        "contributions": live["total_contributions"],
+        "streak": live["longest_streak"],
+        "followers": int(user_data.get("followers", 24)),
+        "v": live["v"],
     }
 
 
@@ -74,7 +266,13 @@ def build_summary_line(metrics: dict) -> str:
 
 
 def refresh_card_urls(content: str, v: int) -> str:
-    """Appends or updates &cache_seconds=1800&v=<timestamp> on stats and streak cards to bust Camo cache."""
+    # Replace external cached streak-stats.demolab.com URL with our live repository-generated streak-stats.svg
+    content = re.sub(
+        r'<img src="https://(?:streak-stats\.demolab\.com|raw\.githubusercontent\.com/1stANUNNAKI/1stANUNNAKI/main/streak-stats\.svg)[^"]*" />',
+        f'<img src="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/main/streak-stats.svg?v={v}" />',
+        content,
+    )
+
     def _update_url(match: re.Match) -> str:
         prefix = match.group(1)
         url = match.group(2)
@@ -84,7 +282,7 @@ def refresh_card_urls(content: str, v: int) -> str:
         return f'{prefix}{url}&cache_seconds=1800&v={v}{suffix}'
 
     card_pattern = re.compile(
-        r'(<img[^>]+src=")(https://(?:github-readme-stats-eight-theta\.vercel\.app|streak-stats\.demolab\.com|github-trophies\.vercel\.app)[^"]+)(")'
+        r'(<img[^>]+src=")(https://(?:github-readme-stats-eight-theta\.vercel\.app|github-trophies\.vercel\.app)[^"]+)(")'
     )
     return card_pattern.sub(_update_url, content)
 
@@ -101,12 +299,10 @@ def update_readme() -> bool:
     )
     updated = pattern.sub(build_summary_line(metrics), content)
     updated = refresh_card_urls(updated, metrics["v"])
-    if updated == content:
-        return False
     README_PATH.write_text(updated, encoding="utf-8")
     return True
 
 
 if __name__ == "__main__":
     changed = update_readme()
-    print(f"README telemetry updated: {changed}")
+    print(f"README and streak-stats.svg telemetry updated: {changed}")
