@@ -1,4 +1,7 @@
-  
+<p align="center">
+  <img src="docs/assets/homepage-preview.png" alt="1stANUNNAKI — Home Page Preview" width="100%" />
+</p>
+
 <div align="center">
 
   <a href="https://1stanunnaki.github.io/1stANUNNAKI/">
