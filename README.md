@@ -75,10 +75,10 @@
 
 <div align="center">
 
-<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api?username=1stANUNNAKI&show_icons=true&hide_border=false&bg_color=060B1E&title_color=8087E2&icon_color=FACC15&text_color=DEE7F0&border_color=5B5C8A&ring_color=8087E2&include_all_commits=true&count_private=true&custom_title=%F0%9F%8E%AE%20PLAYER%20STATS&cache_seconds=1800&v=1794000362" />
-<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=1stANUNNAKI&layout=compact&hide_border=false&bg_color=060B1E&title_color=8087E2&text_color=DEE7F0&border_color=5B5C8A&langs_count=8&custom_title=%E2%9A%94%EF%B8%8F%20WEAPON%20MASTERY&cache_seconds=1800&v=1794000362" />
+<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api?username=1stANUNNAKI&show_icons=true&hide_border=false&bg_color=060B1E&title_color=8087E2&icon_color=FACC15&text_color=DEE7F0&border_color=5B5C8A&ring_color=8087E2&include_all_commits=true&count_private=true&custom_title=%F0%9F%8E%AE%20PLAYER%20STATS&cache_seconds=1800&v=1794015951" />
+<img height="180" src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=1stANUNNAKI&layout=compact&hide_border=false&bg_color=060B1E&title_color=8087E2&text_color=DEE7F0&border_color=5B5C8A&langs_count=8&custom_title=%E2%9A%94%EF%B8%8F%20WEAPON%20MASTERY&cache_seconds=1800&v=1794015951" />
 
-<img src="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/main/streak-stats.svg?v=1794000362" />
+<img src="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/main/streak-stats.svg?v=1794015951" />
 
 </div>
 
@@ -88,7 +88,7 @@
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/main/trophies.svg?v=1794000362" />
+<img src="https://raw.githubusercontent.com/1stANUNNAKI/1stANUNNAKI/main/trophies.svg?v=1794015951" />
 
 </div>
 
@@ -109,7 +109,7 @@
   <img src="https://www.gitskins.com/api/section/galaxy?username=1stANUNNAKI&theme=midnight&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F4013617%3Fv%3D4" alt="1stanunnaki galaxy visual" />
 </p>
 
-<p align="center"><b>22</b> public repositories, <b>11</b> stars, <b>4398</b> contributions in the last year, a longest streak of <b>8</b> days and <b>47</b> followers.</p>
+<p align="center"><b>22</b> public repositories, <b>11</b> stars, <b>4399</b> contributions in the last year, a longest streak of <b>8</b> days and <b>49</b> followers.</p>
 
 ----
 ### 🌐 links 
