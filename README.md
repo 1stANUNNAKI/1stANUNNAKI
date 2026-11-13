@@ -4,17 +4,15 @@
   <a href="https://1stanunnaki.github.io/1stANUNNAKI/">
     <img src="dashboard.gif" alt="𝕭𝖆𝖘𝖍𝖆𝖗 𝕿𝖜𝖆𝖎𝖏 | 𒁀𒊺𒀀𒊒 — Interactive Dashboard" width="100%" />
   </a>
-
   <br />
 
   <!-- Animated Terminal ASCII Wordmark (Clean Local SVG) -->
   <a href="https://github.com/1stANUNNAKI">
     <img src="aciillskin.svg" width="100%" alt="ANUNNAKI — 𝕭𝖆𝖘𝖍𝖆𝖗 𝕿𝖜𝖆𝖎𝖏 | 𒁀𒊺𒀀𒊒 Animated ASCII Wordmark" />
   </a>
-
   <br />
 
-  <h1>🐲 𝕭𝖆𝖘𝖍𝖆𝖗 𝕿𝖜𝖆𝖎𝖏 | 𒁀𒊺𒀀𒊒</h1>
+  <h1>🐉𝕭𝖆𝖘𝖍𝖆𝖗 𝕿𝖜𝖆𝖎𝖏 | 𒁀𒊺𒀀𒊒</h1>
   <h3>AI Engineer &amp; Vibe Coder · Cybersecurity &amp; EdTech Architect · Full-Stack Systems Builder</h3>
 
   <p>
